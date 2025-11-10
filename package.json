@@ -21,7 +21,7 @@
     "react-dropzone": "^14.3.8",
     "tailwind-merge": "^3.3.1",
     "zustand": "^5.0.8",
-    "@remix-run/dev"
+    "@remix-run/dev": "^2.11.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
