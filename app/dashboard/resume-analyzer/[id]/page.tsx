@@ -29,8 +29,13 @@ export default async function ResumeDetail({
     redirect('/dashboard/resume-analyzer')
   }
 
+  // Get public URL for the resume
+ const { data: { publicUrl } } = supabase.storage
+    .from('resumes')
+    .getPublicUrl(resume.resume_path) 
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+    <div className="min-h-screen bg-gray-50">
       {/* Enhanced Header */}
       <header className="bg-gradient-to-r from-[#021f69] via-[#0a2f7a] to-[#021f69] shadow-xl sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
@@ -67,7 +72,8 @@ export default async function ResumeDetail({
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Hero Card with Resume Info */}
         <div className="bg-white rounded-3xl shadow-xl p-8 mb-8 border border-gray-200">
-          <div className="flex items-start justify-between mb-6">
+          {/* Desktop Layout */}
+          <div className="hidden md:flex items-start justify-between mb-6">
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-4">
                 <div className="p-3 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl shadow-lg">
@@ -81,8 +87,9 @@ export default async function ResumeDetail({
                 </div>
               </div>
 
-              {/* Status Badge */}
-              <div className="inline-flex">
+              <div className="flex items-center gap-4">
+              
+
                 {resume.feedback ? (
                   <div className="px-4 py-2 bg-gradient-to-r from-green-50 to-emerald-50 rounded-full border border-green-200">
                     <span className="text-sm font-semibold text-green-700 flex items-center gap-2">
@@ -102,10 +109,93 @@ export default async function ResumeDetail({
                     </span>
                   </div>
                 )}
+
+
+                  <a
+                  href={publicUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-white border-2 border-gray-900 text-gray-900 font-bold rounded-xl hover:bg-gray-900 hover:text-white transition-all duration-200"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                  View Uploaded Resume
+                </a>
+
               </div>
             </div>
 
-            {/* Quick Score Display */}
+            {resume.feedback?.score && (
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 rounded-full blur-2xl opacity-30 animate-pulse"></div>
+                <div className="relative bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-6 border border-blue-200 shadow-lg">
+                  <div className="text-center">
+                    <div className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 mb-2">
+                      {resume.feedback.score}
+                    </div>
+                    <p className="text-sm font-semibold text-gray-600">Overall Score</p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      {resume.feedback.score >= 70 ? '🎉 Excellent!' : 
+                       resume.feedback.score >= 50 ? '👍 Good' : '📈 Needs Work'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Mobile Layout */}
+          <div className="md:hidden space-y-6">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl shadow-lg">
+                <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">{resume.company_name || 'Resume Analysis'}</h2>
+                <p className="text-base text-gray-600">{resume.job_title || resume.image_path}</p>
+              </div>
+            </div>
+
+            {/* Status Badge */}
+            {resume.feedback ? (
+              <div className="inline-flex px-4 py-2 bg-gradient-to-r from-green-50 to-emerald-50 rounded-full border border-green-200">
+                <span className="text-sm font-semibold text-green-700 flex items-center gap-2">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  Analysis Complete
+                </span>
+              </div>
+            ) : (
+              <div className="inline-flex px-4 py-2 bg-orange-50 rounded-full border border-orange-200">
+                <span className="text-sm font-semibold text-orange-700 flex items-center gap-2">
+                  <svg className="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  Pending Analysis
+                </span>
+              </div>
+            )}
+
+            {/* View Resume Button - Full Width on Mobile */}
+            <a
+              href={publicUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 w-full px-6 py-3 bg-gray-900 text-white font-bold rounded-xl hover:bg-gray-800 transition-all duration-200"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+              View Uploaded Resume
+            </a>
+
+            {/* Score Card on Mobile */}
             {resume.feedback?.score && (
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 rounded-full blur-2xl opacity-30 animate-pulse"></div>
@@ -164,10 +254,7 @@ export default async function ResumeDetail({
         {/* Analysis Results Section */}
         {resume.feedback ? (
           <div className="space-y-6">
-            {/* Summary Component */}
             <Summary feedback={resume.feedback} />
-            
-            {/* ATS Score Component */}
             <ATS 
               score={resume.feedback.ATS?.score || resume.feedback.score || 0} 
               suggestions={
@@ -179,12 +266,9 @@ export default async function ResumeDetail({
                 []
               } 
             />
-            
-            {/* Details Component with Accordions */}
             <Details feedback={resume.feedback} />
           </div>
         ) : (
-          /* No Analysis State */
           <div className="bg-white rounded-3xl shadow-xl p-12 text-center border border-gray-200">
             <div className="relative mb-8 inline-block">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 rounded-full blur-3xl opacity-20 animate-pulse"></div>
@@ -200,31 +284,23 @@ export default async function ResumeDetail({
               This resume hasn't been analyzed. Click below to get instant AI-powered feedback.
             </p>
             
-            <button
-              onClick={() => {
-                fetch('/api/analyze-resume', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ resumeId: id })
-                }).then(() => window.location.reload())
-              }}
-              className="px-10 py-4 bg-gradient-to-r from-[#CE2D4F] via-[#E63946] to-[#FF4757] text-white text-lg font-bold rounded-full shadow-2xl shadow-red-500/40 hover:shadow-red-500/60 transition-all duration-300 hover:scale-105"
+            <Link
+              href={`/api/analyze-resume?resumeId=${id}`}
+              className="inline-flex items-center gap-3 px-10 py-4 bg-gradient-to-r from-[#CE2D4F] via-[#E63946] to-[#FF4757] text-white text-lg font-bold rounded-full shadow-2xl shadow-red-500/40 hover:shadow-red-500/60 transition-all duration-300 hover:scale-105"
             >
-              <span className="flex items-center gap-3">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-                Analyze Now
-              </span>
-            </button>
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              Analyze Now
+            </Link>
           </div>
         )}
       </main>
 
       {/* Footer */}
-      <footer className="relative mt-16 overflow-hidden bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900">
-        <div className="relative max-w-7xl mx-auto px-6 py-10 text-center">
-          <p className="text-gray-300 text-base">© 2025 Resume Analyzer. Empowering careers with AI.</p>
+      <footer className="bg-gray-900 mt-16">
+        <div className="max-w-7xl mx-auto px-6 py-10 text-center">
+          <p className="text-gray-400 text-base">© 2025 Resume Analyzer. Empowering careers with AI.</p>
         </div>
       </footer>
     </div>
