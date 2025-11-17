@@ -41,7 +41,7 @@ const Agent = ({
   userId: string;
   interviewId: string;
   feedbackId?: string;
-  type: "generate" | "interview";
+  type: string;  // Changed from "generate" | "interview"
   questions?: string[];
 }) => {
   const router = useRouter();
