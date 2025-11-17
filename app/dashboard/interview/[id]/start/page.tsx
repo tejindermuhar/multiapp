@@ -36,7 +36,7 @@ export default async function StartInterviewPage({ params }: RouteParams) {
           userId={user.id}
           interviewId={id}
           feedbackId={feedback?.id}
-          type={interview.type}
+          type={interview.type as "interview" | "generate"}
           questions={interview.questions}
         />
       </div>
