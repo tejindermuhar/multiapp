@@ -9,23 +9,13 @@ import { interviewer } from "@/constants";
 import { createFeedback } from "@/lib/actions/interview.action";
 import { toast } from "sonner";
 
-// Type definitions
-interface AgentProps {
-  userName: string;
-  userId: string;
-  interviewId: string;
-  feedbackId?: string;
-  type: "generate" | "interview";
-  questions?: string[];
-}
-
-interface Message {
+type Message = {
   type: string;
   transcriptType?: string;
   role: "user" | "assistant" | "system";
   transcript?: string;
   content?: string;
-}
+};
 
 enum CallStatus {
   INACTIVE = "INACTIVE",
@@ -34,10 +24,10 @@ enum CallStatus {
   FINISHED = "FINISHED",
 }
 
-interface SavedMessage {
+type SavedMessage = {
   role: "user" | "system" | "assistant";
   content: string;
-} 
+};
 
 const Agent = ({
   userName,
@@ -46,7 +36,14 @@ const Agent = ({
   feedbackId,
   type,
   questions,
-}: AgentProps) => {
+}: {
+  userName: string;
+  userId: string;
+  interviewId: string;
+  feedbackId?: string;
+  type: "generate" | "interview";
+  questions?: string[];
+}) => {
   const router = useRouter();
   const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
   const [messages, setMessages] = useState<SavedMessage[]>([]);
@@ -54,7 +51,6 @@ const Agent = ({
   const [lastMessage, setLastMessage] = useState<string>("");
   const [isGeneratingFeedback, setIsGeneratingFeedback] = useState(false);
   
-  // Use ref to prevent duplicate feedback generation
   const feedbackGeneratedRef = useRef(false);
 
   useEffect(() => {
