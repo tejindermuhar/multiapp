@@ -9,7 +9,7 @@ import { interviewer } from "@/constants";
 import { createFeedback } from "@/lib/actions/interview.action";
 import { toast } from "sonner";
 
-
+// Type definitions
 interface AgentProps {
   userName: string;
   userId: string;
@@ -17,6 +17,14 @@ interface AgentProps {
   feedbackId?: string;
   type: "generate" | "interview";
   questions?: string[];
+}
+
+interface Message {
+  type: string;
+  transcriptType?: string;
+  role: "user" | "assistant" | "system";
+  transcript?: string;
+  content?: string;
 }
 
 enum CallStatus {
@@ -57,7 +65,10 @@ const Agent = ({
     };
     const onMessage = (message: Message) => {
       if (message.type === "transcript" && message.transcriptType === "final") {
-        const newMessage = { role: message.role, content: message.transcript };
+        const newMessage = { 
+          role: message.role, 
+          content: message.transcript || "" 
+        };
         console.log("New message:", newMessage);
         setMessages((prev) => [...prev, newMessage]);
       }

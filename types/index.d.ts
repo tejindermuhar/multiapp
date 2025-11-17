@@ -13,14 +13,6 @@ interface Interview {
   createdAt: string;
 }
 
-interface Message {
-  type: string;
-  transcriptType?: string;
-  role: "user" | "assistant" | "system";
-  transcript?: string;
-  content?: string;
-}
-
 interface Feedback {
   id: string;
   interviewId: string;
