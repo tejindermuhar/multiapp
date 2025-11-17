@@ -43,7 +43,7 @@ const Agent = ({
   feedbackId?: string;
   type: string;
   questions?: string[];
-}) => { 
+}) => {   
   const router = useRouter();
   const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
   const [messages, setMessages] = useState<SavedMessage[]>([]);
@@ -51,7 +51,7 @@ const Agent = ({
   const [lastMessage, setLastMessage] = useState<string>("");
   const [isGeneratingFeedback, setIsGeneratingFeedback] = useState(false);
   
-  const feedbackGeneratedRef = useRef(false);
+  const feedbackGeneratedRef = useRef(false); 
 
   useEffect(() => {
     const onCallStart = () => setCallStatus(CallStatus.ACTIVE);
