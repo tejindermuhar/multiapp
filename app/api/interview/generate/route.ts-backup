@@ -1,0 +1,83 @@
+import OpenAI from "openai";
+import { createClient } from "@/lib/supabase/server";
+import { getRandomInterviewCover } from "@/lib/utils";
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+export async function POST(request: Request) {
+  const { type, role, level, techstack, amount, userid } = await request.json();
+
+  try {
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content: "You are a professional interviewer creating interview questions. Return only a valid JSON array of strings.",
+        },
+        {
+          role: "user",
+          content: `Prepare questions for a job interview.
+
+The job role is ${role}.
+The job experience level is ${level}.
+The tech stack used in the job is: ${techstack}.
+The focus between behavioural and technical questions should lean towards: ${type}.
+The amount of questions required is: ${amount}.
+
+Please return only the questions, without any additional text.
+The questions are going to be read by a voice assistant so do not use "/" or "*" or any other special characters which might break the voice assistant.
+
+Return the questions formatted like this:
+["Question 1", "Question 2", "Question 3"]
+
+Thank you! <3`,
+        },
+      ],
+      response_format: { type: "json_object" },
+    });
+
+    const content = completion.choices[0].message.content;
+    const parsed = JSON.parse(content!);
+    const questions = parsed.questions || JSON.parse(content!);
+
+    const supabase = await createClient();
+
+    const interview = {
+      role: role,
+      type: type,
+      level: level,
+      techstack: techstack.split(",").map((tech: string) => tech.trim()),
+      questions: Array.isArray(questions) ? questions : Object.values(questions),
+      user_id: userid,
+      finalized: true,
+      cover_image: getRandomInterviewCover(),
+      created_at: new Date().toISOString(),
+    };
+
+    const { error } = await supabase.from("interviews").insert(interview);
+
+    if (error) {
+      console.error("Supabase error:", error);
+      throw error;
+    }
+
+    return Response.json({ success: true }, { status: 200 });
+  } catch (error: any) {
+    console.error("Error creating interview:", error);
+    
+    return Response.json(
+      { 
+        success: false, 
+        message: error?.message || "Failed to create interview" 
+      }, 
+      { status: 500 }
+    );
+  }
+}
+
+export async function GET() {
+  return Response.json({ success: true, data: "Interview API" }, { status: 200 });
+}

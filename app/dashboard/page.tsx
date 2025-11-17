@@ -89,8 +89,73 @@ export default function DashboardPage() {
             </div>
           </Link>
 
-          {/* Placeholder for Future Apps */}
-          <div className="group block animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+          {/* Voice Agent Interview App */}
+          <Link href="/dashboard/interview" className="group block animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+            <div className="relative h-full bg-white rounded-3xl border-2 border-gray-200 hover:border-purple-300 shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden hover:scale-105">
+              {/* Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-pink-500/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              
+              <div className="relative p-8">
+                {/* Icon with Glow */}
+                <div className="relative mb-6">
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-400 rounded-2xl blur-xl opacity-0 group-hover:opacity-40 transition-opacity duration-500"></div>
+                  <div className="relative w-20 h-20 bg-gradient-to-br from-purple-600 via-purple-700 to-pink-700 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:shadow-2xl transition-shadow duration-300">
+                    <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                    </svg>
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="mb-6">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-purple-600 transition-colors">
+                    Voice Agent Interview
+                  </h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    Practice real-time interviews with AI voice agents and get instant feedback
+                  </p>
+                </div>
+
+                {/* Features */}
+                <div className="space-y-2 mb-6">
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <span>Real-Time Voice Interaction</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <span>AI-Powered Evaluation</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <span>Instant Feedback & Scoring</span>
+                  </div>
+                </div>
+
+                {/* CTA Button */}
+                <div className="flex items-center justify-between pt-4 border-t border-gray-200">
+                  <span className="text-purple-600 font-bold group-hover:text-pink-600 transition-colors flex items-center gap-2">
+                    Open App
+                    <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </span>
+                  <div className="px-3 py-1.5 bg-green-50 rounded-full">
+                    <span className="text-xs font-semibold text-green-700">Active</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Link>
+
+          {/* Placeholder for Future App */}
+          <div className="group block animate-fade-in-up" style={{ animationDelay: '200ms' }}>
             <div className="relative h-full bg-white rounded-3xl border-2 border-dashed border-gray-300 shadow-md transition-all duration-500 overflow-hidden">
               <div className="relative p-8 flex flex-col items-center justify-center text-center h-full min-h-[400px]">
                 <div className="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center text-gray-400 mb-6">
@@ -107,24 +172,6 @@ export default function DashboardPage() {
               </div>
             </div>
           </div>
-
-          <div className="group block animate-fade-in-up" style={{ animationDelay: '200ms' }}>
-            <div className="relative h-full bg-white rounded-3xl border-2 border-dashed border-gray-300 shadow-md transition-all duration-500 overflow-hidden">
-              <div className="relative p-8 flex flex-col items-center justify-center text-center h-full min-h-[400px]">
-                <div className="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center text-gray-400 mb-6">
-                  <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                </div>
-                <h3 className="text-2xl font-bold text-gray-400 mb-3">
-                  Under Development
-                </h3>
-                <p className="text-gray-500">
-                  New app launching soon
-                </p>
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* Quick Stats */}
@@ -137,8 +184,8 @@ export default function DashboardPage() {
                 </svg>
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-900">1</p>
-                <p className="text-sm text-gray-600">Active App</p>
+                <p className="text-2xl font-bold text-gray-900">2</p>
+                <p className="text-sm text-gray-600">Active Apps</p>
               </div>
             </div>
           </div>

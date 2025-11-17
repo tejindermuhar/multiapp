@@ -9,7 +9,7 @@ async function Header() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  // Prefer full_name, fall back to other metadata or email local-part
+  //Prefer full_name, fall back to other metadata or email local-part
   const displayName =
     user.user_metadata?.full_name ??
     user.user_metadata?.name ??

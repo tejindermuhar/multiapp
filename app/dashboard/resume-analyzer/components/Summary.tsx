@@ -1,6 +1,6 @@
 // components/resume/Summary.tsx
-import ScoreGauge from "./ScoreGauge";
-import ScoreBadge from "./ScoreBadge";
+import ScoreGauge from "@/app/dashboard/resume-analyzer/components/ScoreGauge";
+import ScoreBadge from "@/app/dashboard/resume-analyzer/components/ScoreBadge";
 
 const Category = ({ title, score }: { title: string; score: number }) => {
   const textColor =

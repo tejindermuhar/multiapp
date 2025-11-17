@@ -46,7 +46,7 @@ export default async function HomePage() {
             Get Started
           </Link>
         </nav>
-      </header>
+      </header> 
 
       {/* Hero Section */}
       <section className="pt-40 pb-24 px-6 relative overflow-hidden">

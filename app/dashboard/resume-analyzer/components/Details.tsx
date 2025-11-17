@@ -3,7 +3,7 @@
 
 import { cn } from "@/lib/utils";
 import { Accordion, AccordionContent, AccordionHeader, AccordionItem } from "./Accordion";
-import ScoreBadge from "./ScoreBadge";
+import ScoreBadge from "@/app/dashboard/resume-analyzer/components/ScoreBadge";
 
 const CategoryHeader = ({ title, categoryScore }: { title: string; categoryScore: number }) => {
   return (

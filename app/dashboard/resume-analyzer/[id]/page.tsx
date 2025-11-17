@@ -2,9 +2,9 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import Summary from '@/components/resume/Summary'
-import ATS from '@/components/resume/ATS'
-import Details from '@/components/resume/Details'
+import Summary from '@/app/dashboard/resume-analyzer/components/Summary'
+import ATS from '@/app/dashboard/resume-analyzer/components/ATS'
+import Details from '@/app/dashboard/resume-analyzer/components/Details'
 
 export default async function ResumeDetail({ 
   params 

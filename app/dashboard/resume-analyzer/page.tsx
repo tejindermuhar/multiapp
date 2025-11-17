@@ -2,7 +2,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import ScoreCircle from '@/components/resume/ScoreCircle'
+import ScoreCircle from '@/app/dashboard/resume-analyzer/components/ScoreCircle'
 
 export default async function ResumeAnalyzerPage() {
   const supabase = await createClient()
