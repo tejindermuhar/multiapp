@@ -13,6 +13,14 @@ interface Interview {
   createdAt: string;
 }
 
+interface Message {
+  type: string;
+  transcriptType?: string;
+  role: "user" | "assistant" | "system";
+  transcript?: string;
+  content?: string;
+}
+
 interface Feedback {
   id: string;
   interviewId: string;
@@ -27,15 +35,6 @@ interface Feedback {
   areasForImprovement: string[];
   finalAssessment: string;
   createdAt: string;
-}
-
-interface AgentProps {
-  userName: string;
-  userId: string;
-  interviewId: string;
-  feedbackId?: string;
-  type: "generate" | "interview";
-  questions?: string[];
 }
 
 interface CreateFeedbackParams {

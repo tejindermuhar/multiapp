@@ -9,6 +9,16 @@ import { interviewer } from "@/constants";
 import { createFeedback } from "@/lib/actions/interview.action";
 import { toast } from "sonner";
 
+
+interface AgentProps {
+  userName: string;
+  userId: string;
+  interviewId: string;
+  feedbackId?: string;
+  type: "generate" | "interview";
+  questions?: string[];
+}
+
 enum CallStatus {
   INACTIVE = "INACTIVE",
   CONNECTING = "CONNECTING",
