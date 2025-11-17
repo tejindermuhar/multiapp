@@ -43,7 +43,7 @@ const Agent = ({
   feedbackId?: string;
   type: string;  // Changed from "generate" | "interview"
   questions?: string[];
-}) => {
+}) => { 
   const router = useRouter();
   const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
   const [messages, setMessages] = useState<SavedMessage[]>([]);
