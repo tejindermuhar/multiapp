@@ -27,19 +27,8 @@ enum CallStatus {
 type SavedMessage = {
   role: "user" | "system" | "assistant";
   content: string;
-};
-
-type InterviewType = "interview" | "generate";
-
-interface AgentProps {
-  userName: string;
-  userId: string;
-  interviewId: string;
-  feedbackId?: string;
-  type: InterviewType;
-  questions?: string[];
-}
-
+}; 
+ 
 const Agent = ({
   userName,
   userId,
@@ -47,15 +36,22 @@ const Agent = ({
   feedbackId,
   type,
   questions,
-}: AgentProps) => {
+}: {
+  userName: string;
+  userId: string;
+  interviewId: string;
+  feedbackId?: string;
+  type: string;
+  questions?: string[];
+}) => {   
   const router = useRouter();
   const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
   const [messages, setMessages] = useState<SavedMessage[]>([]);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [lastMessage, setLastMessage] = useState<string>("");
   const [isGeneratingFeedback, setIsGeneratingFeedback] = useState(false);
-
-  const feedbackGeneratedRef = useRef(false);
+  
+  const feedbackGeneratedRef = useRef(false); 
 
   useEffect(() => {
     const onCallStart = () => setCallStatus(CallStatus.ACTIVE);
@@ -65,9 +61,9 @@ const Agent = ({
     };
     const onMessage = (message: Message) => {
       if (message.type === "transcript" && message.transcriptType === "final") {
-        const newMessage = {
-          role: message.role,
-          content: message.transcript || "",
+        const newMessage = { 
+          role: message.role, 
+          content: message.transcript || "" 
         };
         console.log("New message:", newMessage);
         setMessages((prev) => [...prev, newMessage]);
@@ -114,7 +110,7 @@ const Agent = ({
       // Mark as started
       feedbackGeneratedRef.current = true;
       setIsGeneratingFeedback(true);
-
+      
       console.log("Generating feedback with messages:", messages.length);
 
       if (messages.length === 0) {
@@ -126,7 +122,7 @@ const Agent = ({
 
       try {
         toast.loading("Generating your feedback...");
-
+        
         const { success, feedbackId: id, error } = await createFeedback({
           interviewId: interviewId!,
           userId: userId!,
@@ -154,11 +150,7 @@ const Agent = ({
       }
     };
 
-    if (
-      callStatus === CallStatus.FINISHED &&
-      !feedbackGeneratedRef.current &&
-      !isGeneratingFeedback
-    ) {
+    if (callStatus === CallStatus.FINISHED && !feedbackGeneratedRef.current && !isGeneratingFeedback) {
       if (type === "generate") {
         router.push("/dashboard/interview");
       } else {
@@ -175,7 +167,7 @@ const Agent = ({
       setCallStatus(CallStatus.CONNECTING);
       setMessages([]); // Clear previous messages
       feedbackGeneratedRef.current = false; // Reset ref
-
+      
       if (type === "generate") {
         await vapi.start(process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!, {
           variableValues: { username: userName, userid: userId },
@@ -209,26 +201,12 @@ const Agent = ({
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
           <div className="bg-white rounded-2xl p-8 max-w-md text-center shadow-2xl">
             <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
-              <svg
-                className="w-8 h-8 text-white animate-spin"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                />
+              <svg className="w-8 h-8 text-white animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
               </svg>
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">
-              Analyzing Your Performance
-            </h3>
-            <p className="text-gray-600">
-              Please wait while we generate your feedback...
-            </p>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">Analyzing Your Performance</h3>
+            <p className="text-gray-600">Please wait while we generate your feedback...</p>
           </div>
         </div>
       )}
@@ -238,19 +216,9 @@ const Agent = ({
         <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/90 backdrop-blur-sm text-purple-700 rounded-full text-sm font-bold shadow-lg mb-4">
           <svg className="w-5 h-5 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
             <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-            <path
-              fillRule="evenodd"
-              d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
-              clipRule="evenodd"
-            />
+            <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
           </svg>
-          {callStatus === "ACTIVE"
-            ? "Interview in Progress"
-            : callStatus === "CONNECTING"
-            ? "Connecting..."
-            : callStatus === "FINISHED"
-            ? "Interview Completed"
-            : "Ready to Start"}
+          {callStatus === "ACTIVE" ? "Interview in Progress" : callStatus === "CONNECTING" ? "Connecting..." : callStatus === "FINISHED" ? "Interview Completed" : "Ready to Start"}
         </div>
       </div>
 
@@ -262,12 +230,10 @@ const Agent = ({
           <div className="relative bg-white rounded-3xl shadow-2xl p-8 border border-gray-100">
             <div className="flex flex-col items-center">
               <div className="relative mb-6">
-                <div
-                  className={cn(
-                    "absolute inset-0 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 blur-xl opacity-50 transition-opacity",
-                    isSpeaking && "animate-pulse"
-                  )}
-                ></div>
+                <div className={cn(
+                  "absolute inset-0 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 blur-xl opacity-50 transition-opacity",
+                  isSpeaking && "animate-pulse"
+                )}></div>
                 <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-xl">
                   <Image
                     src="/ai-avatar.png"
@@ -298,7 +264,12 @@ const Agent = ({
             <div className="flex flex-col items-center">
               <div className="relative mb-6">
                 <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-xl bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center">
-                  <Image src="/user-avatar.png" alt={userName} fill className="object-cover" />
+                  <Image
+                    src="/user-avatar.png"
+                    alt={userName}
+                    fill
+                    className="object-cover"
+                  />
                 </div>
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-2">{userName}</h3>
@@ -316,18 +287,8 @@ const Agent = ({
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
-                  <svg
-                    className="w-6 h-6 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-                    />
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
                   </svg>
                 </div>
                 <h3 className="text-lg font-bold text-gray-900">Live Transcript</h3>
@@ -353,52 +314,22 @@ const Agent = ({
             <div className="relative flex items-center gap-3 px-12 py-6 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 hover:from-purple-700 hover:via-pink-700 hover:to-blue-700 text-white rounded-full font-bold text-xl shadow-2xl transform group-hover:scale-105 transition-all disabled:transform-none">
               {callStatus === "CONNECTING" ? (
                 <>
-                  <svg
-                    className="w-6 h-6 animate-spin"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                    />
+                  <svg className="w-6 h-6 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                   </svg>
                   Connecting...
                 </>
               ) : callStatus === "FINISHED" ? (
                 <>
-                  <svg
-                    className="w-6 h-6 animate-spin"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                    />
+                  <svg className="w-6 h-6 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                   </svg>
                   Processing...
                 </>
               ) : (
                 <>
-                  <svg
-                    className="w-7 h-7"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                    />
+                  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                   </svg>
                   Start Interview
                 </>
@@ -406,21 +337,14 @@ const Agent = ({
             </div>
           </button>
         ) : (
-          <button onClick={handleDisconnect} className="relative group">
+          <button
+            onClick={handleDisconnect}
+            className="relative group"
+          >
             <div className="absolute -inset-1 bg-red-600 rounded-full blur opacity-50 group-hover:opacity-75 transition-opacity"></div>
             <div className="relative flex items-center gap-3 px-12 py-6 bg-red-600 hover:bg-red-700 text-white rounded-full font-bold text-xl shadow-2xl transform group-hover:scale-105 transition-all">
-              <svg
-                className="w-7 h-7"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M16 8l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M5 3a2 2 0 00-2 2v1c0 8.284 6.716 15 15 15h1a2 2 0 002-2v-3.28a1 1 0 00-.684-.948l-4.493-1.498a1 1 0 00-1.21.502l-1.13 2.257a11.042 11.042 0 01-5.516-5.517l2.257-1.128a1 1 0 00.502-1.21L9.228 3.683A1 1 0 008.279 3H5z"
-                />
+              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 8l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M5 3a2 2 0 00-2 2v1c0 8.284 6.716 15 15 15h1a2 2 0 002-2v-3.28a1 1 0 00-.684-.948l-4.493-1.498a1 1 0 00-1.21.502l-1.13 2.257a11.042 11.042 0 01-5.516-5.517l2.257-1.128a1 1 0 00.502-1.21L9.228 3.683A1 1 0 008.279 3H5z" />
               </svg>
               End Interview
             </div>

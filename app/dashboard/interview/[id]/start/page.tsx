@@ -1,9 +1,6 @@
 import Agent from "../../components/Agent";
 import { getCurrentUser } from "@/lib/actions/auth.action";
-import {
-  getInterviewById,
-  getFeedbackByInterviewId,
-} from "@/lib/actions/interview.action";
+import { getInterviewById, getFeedbackByInterviewId } from "@/lib/actions/interview.action";
 import { redirect } from "next/navigation";
 
 interface RouteParams {
@@ -24,11 +21,6 @@ export default async function StartInterviewPage({ params }: RouteParams) {
     userId: user.id,
   });
 
-  // Type guard function to validate interview type
-  const getValidInterviewType = (type: string): "interview" | "generate" => {
-    return type === "interview" || type === "generate" ? type : "interview";
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 relative overflow-hidden">
       {/* Animated Background */}
@@ -44,7 +36,7 @@ export default async function StartInterviewPage({ params }: RouteParams) {
           userId={user.id}
           interviewId={id}
           feedbackId={feedback?.id}
-          type={getValidInterviewType(interview.type)}
+          type={interview.type}
           questions={interview.questions}
         />
       </div>
